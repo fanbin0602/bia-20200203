@@ -9,7 +9,9 @@ import util.HashUtil;
 public class Main {
 
     public static void main(String[] args) {
+        // 创建区块链对象
         BlockChain bc = new BlockChain();
+        // 打印测试内容
         System.out.println(bc);
     }
 
