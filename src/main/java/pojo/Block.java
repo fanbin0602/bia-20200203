@@ -91,12 +91,20 @@ public class Block {
         this.nonce = nonce;
     }
 
+    /**
+     * 获取计算哈希的原像字符串
+     * @return
+     */
+    public String originalString() {
+        return index + previousHash + timestamp + data + nonce;
+    }
+
     @Override
     public String toString() {
         return "Block{" +
                 "index=" + index +
                 ", timestamp=" + timestamp +
-                ", ='" + hash + '\'' +
+                ", hash='" + hash + '\'' +
                 ", previousHash='" + previousHash + '\'' +
                 ", data='" + data + '\'' +
                 ", nonce=" + nonce +
