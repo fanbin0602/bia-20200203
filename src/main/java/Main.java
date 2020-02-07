@@ -9,10 +9,25 @@ import util.HashUtil;
 public class Main {
 
     public static void main(String[] args) {
-        // 创建区块链对象
-        BlockChain bc = new BlockChain();
-        // 打印测试内容
-        System.out.println(bc);
+
+        BlockChain bc1 = new BlockChain();
+        bc1.addBlock(bc1.generateNextBlock("1-1"));
+        bc1.addBlock(bc1.generateNextBlock("1-2"));
+        bc1.addBlock(bc1.generateNextBlock("1-3"));
+
+        BlockChain bc2 = new BlockChain();
+        bc2.addBlock(bc2.generateNextBlock("2-1"));
+        bc2.addBlock(bc2.generateNextBlock("2-2"));
+
+        System.out.println(bc1);
+        System.out.println(bc2);
+
+        System.out.println("执行替换");
+        bc2.replaceChain(bc1.getBlockChain());
+
+        System.out.println(bc1);
+        System.out.println(bc2);
+
     }
 
 }

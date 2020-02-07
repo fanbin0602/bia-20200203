@@ -39,8 +39,18 @@ public class Block {
      */
     private int nonce;
 
+    /**
+     * 无参构造方法
+     */
     public Block() {
 
+    }
+
+    public Block(int index, long timestamp, String previousHash, String data) {
+        this.index = index;
+        this.timestamp = timestamp;
+        this.previousHash = previousHash;
+        this.data = data;
     }
 
     public int getIndex() {
@@ -130,8 +140,8 @@ public class Block {
         return block.index == this.index &&
                 block.timestamp == this.timestamp &&
                 block.hash.equals(this.hash) &&
-                block.previousHash.equals(previousHash) &&
-                block.data.equals(block.data) &&
+                block.previousHash.equals(this.previousHash) &&
+                block.data.equals(this.data) &&
                 block.nonce == this.nonce;
     }
 
