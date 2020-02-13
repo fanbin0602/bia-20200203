@@ -40,6 +40,14 @@ public class P2PNode {
         sockets = new ArrayList<WebSocket>();
     }
 
+    public BlockChain getBlockChain() {
+        return blockChain;
+    }
+
+    public List<WebSocket> getSockets() {
+        return sockets;
+    }
+
     /**
      * 初始化节点
      * @param port 指定服务端的端口号
@@ -155,7 +163,53 @@ public class P2PNode {
      * @param data
      */
     private void handleBlockResponse(String data) {
+        // 把收到的消息内容解析成
+        List<Block> blocksReceived = JSON.parseArray(data, Block.class);
+        // 获取收到的区块数据里面的最新区块
+        Block latestBlockReceived = blocksReceived.get(blocksReceived.size() - 1);
+        // 获取本地节点最新区块
+        Block latestBlock = blockChain.getLastBlock();
+        // 比较双方最新区块的索引，如果远程的最新区块索引更大，做下一步处理
+        if (latestBlockReceived.getIndex() > latestBlock.getIndex()) {
+            // 判断远程的最新区块是否可以追加到本地区块链末尾，直接追加
+            if (latestBlock.getHash().equals(latestBlockReceived.getPreviousHash())
+                    && latestBlock.getIndex() + 1 == latestBlockReceived.getIndex()) {
+                System.out.println("在本地区块链末尾追加接收到的最新区块");
+                blockChain.addBlock(latestBlockReceived);
+                // 广播最新区块
+                broadcast(resLatestBlockMsg());
+            // 判断远程的区块数据是一个区块还是整个区块链
+            } else if (blocksReceived.size() == 1) {
+                // 如果是一个区块，则获取远程节点的整个区块链
+                System.out.println("向其他节点请求整个区块列表");
+                // 向其他节点请求整个区块列表
+                broadcast(reqBlockChainMsg());
+            } else {
+                // 否则，替换本地区块链数据
+                System.out.println("替换本地的区块数据");
+                blockChain.replaceChain(blocksReceived);
+                // 广播最新区块
+                broadcast(resLatestBlockMsg());
+            }
+        } else {
+            // 否则不处理
+            System.out.println("对方的区块链不必本地的更长，因此，不作处理");
+        }
 
+    }
+
+    /**
+     * 广播消息
+     * @param message 消息内容
+     */
+    private void broadcast(String message) {
+        for (WebSocket socket : sockets) {
+            socket.send(message);
+        }
+    }
+
+    public void broadcastLatestBlock() {
+        broadcast(resLatestBlockMsg());
     }
 
     /**

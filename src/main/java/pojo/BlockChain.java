@@ -164,10 +164,10 @@ public class BlockChain {
         while (true) {
             // 将当前的 Nonce 值赋给 block 对应的属性
             block.setNonce(nonce);
-            System.out.println("当前的 Nonce 值是：" + nonce);
+            // System.out.println("当前的 Nonce 值是：" + nonce);
             // 获取原像字符串并计算哈希值
             String hash = HashUtil.getSHA256(block.originalString());
-            System.out.println("计算出的 Hash 值是：" + hash);
+            // System.out.println("计算出的 Hash 值是：" + hash);
             // 判断当前的 hash 值是否合法
             // 如果合法，将 hash 值赋给 block 对应的属性，退出循环
             if (isValidHash(hash)) {
